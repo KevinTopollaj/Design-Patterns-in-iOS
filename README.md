@@ -13,6 +13,10 @@ Welcome to "Design Patterns in iOS"! This repository is your go-to resource for 
 
 - [Creational-Design-Patterns](Creational-Design-Patterns/README.md)
 
+### Structural Design Patterns
+
+- [Structural-Design-Patterns](Structural-Design-Patterns/README.md)
+
 
 
 
