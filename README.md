@@ -17,7 +17,9 @@ Welcome to "Design Patterns in iOS"! This repository is your go-to resource for 
 
 - [Structural-Design-Patterns](Structural-Design-Patterns/README.md)
 
+### Behavioural Design Patterns
 
+- [Behavioural-Design-Patterns](Behavioural-Design-Patterns/README.md)
 
 
 
