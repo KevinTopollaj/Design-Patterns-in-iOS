@@ -7,21 +7,21 @@ Welcome to "Design Patterns in iOS"! This repository is your go-to resource for 
 
 ### Design Patterns
 
-- [Design-Patterns](Design-Patterns/README.md)
+- [00-Design-Patterns](00-Design-Patterns/README.md)
 
 ### Creational Design Patterns
 
-- [Creational-Design-Patterns](Creational-Design-Patterns/README.md)
+- [01-Creational-Design-Patterns](01-Creational-Design-Patterns/README.md)
 
 ### Structural Design Patterns
 
-- [Structural-Design-Patterns](Structural-Design-Patterns/README.md)
+- [02-Structural-Design-Patterns](02-Structural-Design-Patterns/README.md)
 
 ### Behavioural Design Patterns
 
-- [Behavioural-Design-Patterns](Behavioural-Design-Patterns/README.md)
+- [03-Behavioural-Design-Patterns](03-Behavioural-Design-Patterns/README.md)
 
 ### Architectural Design Patterns
 
-- [Architectural-Design-Patterns](Architectural-Design-Patterns/README.md)
+- [04-Architectural-Design-Patterns](04-Architectural-Design-Patterns/README.md)
 
