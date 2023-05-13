@@ -23,5 +23,5 @@ Welcome to "Design Patterns in iOS"! This repository is your go-to resource for 
 
 ### Architectural Design Patterns
 
-- [Architectural-Design-Patterns](Architectural-Design -Patterns/README.md)
+- [Architectural-Design-Patterns](Architectural-Design-Patterns/README.md)
 
