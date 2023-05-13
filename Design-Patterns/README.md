@@ -1,4 +1,4 @@
-# Design-Patterns-in-iOS
+# Design Patterns
 
 ![](img/p01.jpeg)
 
