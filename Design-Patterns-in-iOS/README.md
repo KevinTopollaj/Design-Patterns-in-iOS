@@ -1,6 +1,6 @@
 # Design-Patterns-in-iOS
 
-![](img/p01.png)
+![](img/p01.jpeg)
 
 
 Design patterns are a collection of best practices used to solve common software development problems. They are reusable solutions that have been time-tested and proven. iOS development employs four main categories of design patterns, which are:
