@@ -3,6 +3,7 @@
 ## Table of contents
 
 * [Intro](#Intro)
+* [Singleton](#Singleton)
 
 
 
@@ -53,3 +54,77 @@ The Service Locator Design Pattern is used to provide a centralized registry of 
 10- Multiton Design Pattern:
 
 The Multiton Design Pattern is used to create a limited number of instances of a class, each with a unique key. This pattern involves creating a dictionary that maps keys to instances of a class and provides a way to retrieve and create new instances based on a key.
+
+
+
+## Singleton
+
+- The Singleton design pattern is a creational pattern that ensures that only one instance of a class can be created and used throughout the lifetime of an application.
+- This is useful in scenarios where you need to ensure that a single, globally accessible instance is used to coordinate activities across multiple parts of an application.
+- In the Singleton pattern, a class has a private initializer that can only be accessed from within the class itself, preventing any other instance from being created.
+- Instead, a static method or property is provided to access the single instance of the class.
+- In Swift, it's best practice to use a `final` class for the Singleton, which prevents subclassing and ensures that the Singleton remains a single instance.
+- Additionally, it's best practice to use a `static` constant property (`static let`) to hold the single instance, as this guarantees that the instance is only created once and is always available.
+
+- 
+
+
+### Implementation
+
+```swift
+import Foundation
+
+final class Singleton {
+    static let shared = Singleton()
+
+    private init() { }
+
+    func printSomething() {
+        print("This is a Singleton")
+    }
+}
+```
+
+- To use the Singleton in your code, you simply call the `shared` property to get the single instance of the class, like this:
+
+```swift
+let singleton = Singleton.shared
+```
+
+- Once you have a reference to the Singleton, you can call methods or access properties as needed:
+
+```swift
+singleton.printSomething()    // This is a Singleton
+```
+
+
+### Positive aspects:
+
+1. `Global Access`: The Singleton allows for a globally accessible instance, providing a convenient way to access its functionality throughout the application.
+
+2. `Single Instance`: The pattern guarantees that only one instance of the class exists, eliminating the possibility of multiple instances causing conflicts or synchronization issues.
+
+3. `Resource Sharing`: Singleton instances are useful for sharing resources that need to be accessed by multiple objects.
+
+4. `Lazy Initialization`: The singleton instance is created only when it's accessed for the first time, allowing for efficient resource utilization.
+
+5. `Thread Safety`: By default, Swift guarantees thread safety for lazy initialization, ensuring that only one instance is created even in concurrent environments.
+
+
+### Negative aspects:
+
+1. `Tight Coupling`: Singleton instances are globally accessible, which can lead to tight coupling between classes. This can make your code less modular and harder to test.
+
+2. `Global State`: The use of singletons can introduce global state, which can make your codebase harder to reason about and debug. Changes made to the singleton can affect the behavior of multiple components.
+
+3. `Dependency Management`: Singleton instances can make it challenging to manage dependencies and can result in hidden dependencies between classes.
+
+4. `Testing Complexity`: Because singletons are globally accessible, it can be difficult to isolate and test components that depend on them. This can lead to complex unit tests.
+
+
+### Conclusions:
+
+- The Singleton pattern is a powerful tool for ensuring a single instance of a class and providing global access to it.
+- It offers advantages such as global accessibility, resource sharing, and lazy initialization.
+- However, it also has drawbacks like tight coupling, global state, and testing complexity.
+- It's essential to evaluate whether the Singleton pattern is the best solution for your specific use case, considering the pros and cons mentioned above.
