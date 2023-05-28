@@ -4,7 +4,7 @@
 
 * [Intro](#Intro)
 * [Singleton](#Singleton)
-
+* [Factory Method](#Factory-Method)
 
 
 
@@ -128,3 +128,100 @@ singleton.printSomething()    // This is a Singleton
 - It offers advantages such as global accessibility, resource sharing, and lazy initialization.
 - However, it also has drawbacks like tight coupling, global state, and testing complexity.
 - It's essential to evaluate whether the Singleton pattern is the best solution for your specific use case, considering the pros and cons mentioned above.
+
+
+
+## Factory Method
+
+
+- The `Factory Method` design pattern is a creational pattern that provides an interface for creating objects but allows subclasses to decide which class to instantiate.
+
+- It encapsulates object creation logic within a method, known as the factory method, which is responsible for creating and returning instances of related classes.
+
+- This pattern promotes loose coupling and flexibility by allowing the client code to work with the abstract interface instead of dealing with concrete class instantiations directly.
+
+
+### Implementation
+
+- To illustrate the `Factory Method` pattern in iOS, let's consider a scenario where we have a messaging app that supports multiple types of message senders, such as `EmailSender` and `SMSSender`.
+
+- We create an abstract `MessageSender` protocol and two concrete classes, `EmailSender` and `SMSSender`, which will implement the `MessageSender` protocol and provide concrete implementations of the `sendMessage` method.
+
+```swift
+// Abstract MessageSender protocol
+protocol MessageSender {
+    func sendMessage(message: String)
+}
+
+// Concrete EmailSender class
+class EmailSender: MessageSender {
+    func sendMessage(message: String) {
+        print("Sending email message: \(message)")
+    }
+}
+
+// Concrete SMSSender class
+class SMSSender: MessageSender {
+    func sendMessage(message: String) {
+        print("Sending SMS message: \(message)")
+    }
+}
+```
+
+- The `MessageSenderFactory` class serves as the factory class and provides a `static` `createMessageSender` method.
+- This method takes a `MessageType` parameter to determine which concrete subclass to instantiate.
+- If the type is `.email`, it creates and returns an `EmailSender` instance; if it's `.sms`, it creates and returns a `SMSSender` instance.
+
+```swift
+// MessageSenderFactory class implementing the Factory Method pattern
+class MessageSenderFactory {
+    enum MessageType {
+        case email
+        case sms
+    }
+    
+    static func createMessageSender(type: MessageType) -> MessageSender {
+        switch type {
+        case .email:
+            return EmailSender()
+        case .sms:
+            return SMSSender()
+        }
+    }
+}
+```
+
+- To use the `MessageSenderFactory` in your code, you can follow these steps:
+
+```swift
+let sender = MessageSenderFactory.createMessageSender(type: .sms)
+sender.sendMessage(message: "Hello Linkedin!")  // Sending SMS message: Hello Linkedin!
+```
+
+
+### Positive aspects:
+
+1. Provides a way to encapsulate object creation logic, allowing client code to work with the abstract interface and reducing dependencies on concrete classes.
+
+2. Supports the Open-Closed Principle by allowing the addition of new subclasses without modifying the existing factory class.
+
+3. Enhances code readability and maintainability by separating object creation from the client code.
+
+4. Promotes code reuse by providing a common interface for creating related objects.
+
+
+### Negative aspects:
+
+1. Introduces additional complexity, especially when dealing with a large number of subclasses and product variations.
+
+2. Can lead to an increase in the number of classes and files, which may make the codebase harder to navigate.
+
+3. Requires careful design and consideration to ensure the proper organization and relationship between the factory class and the product subclasses.
+
+
+### Conclusions:
+
+- The Factory Method design pattern is a valuable tool in iOS development for creating objects in a flexible and extensible manner.
+- By encapsulating object creation logic and using a factory method, it promotes loose coupling, code reusability, and maintainability. 
+- It's important to carefully consider the trade-offs and apply this pattern judiciously to avoid unnecessary complexity and potential drawbacks.
+- You can adapt the implementation to your specific needs and requirements.
