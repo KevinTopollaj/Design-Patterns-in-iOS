@@ -5,6 +5,7 @@
 * [Intro](#Intro)
 * [Singleton](#Singleton)
 * [Factory Method](#Factory-Method)
+* [Dependency Injection](#Dependency-Injection)
 
 
 
@@ -225,3 +226,103 @@ sender.sendMessage(message: "Hello Linkedin!")  // Sending SMS message: Hello Li
 - By encapsulating object creation logic and using a factory method, it promotes loose coupling, code reusability, and maintainability. 
 - It's important to carefully consider the trade-offs and apply this pattern judiciously to avoid unnecessary complexity and potential drawbacks.
 - You can adapt the implementation to your specific needs and requirements.
+
+
+
+## Dependency Injection
+
+- The Dependency Injection design pattern is a software design principle that aims to reduce dependencies between components by allowing dependencies to be injected from the outside rather than being created or managed internally.
+- It promotes loose coupling and improves the testability, maintainability, and flexibility of the codebase.
+- In the Dependency Injection design pattern, dependencies are "injected" into a class through `constructor injection`, `property injection`, or `method injection`.
+
+- `Constructor Injection`: Dependencies are passed to a class through its constructor.
+- `Property Injection`: Dependencies are set through properties or variables of a class.
+- `Method Injection`: Dependencies are provided through method parameters.
+
+- Now let's dive into a detailed implementation example using constructor injection.
+
+
+### Implementation
+
+- In this example, we have a `DataManager` class that depends on a `DataSource` protocol.
+- The `DataManager` is decoupled from specific implementations of the `DataSource` protocol, making it more flexible and easier to test.
+- We provide the appropriate implementation of the `DataSource` protocol during initialization of the `DataManager` using `constructor injection`.
+
+```swift
+/ A protocol defining a data source
+protocol DataSource {
+    func fetchData() -> String
+}
+
+// A class that depends on the DataSource protocol and
+// injects it using constructor injection
+class DataManager {
+    private let dataSource: DataSource
+
+    init(dataSource: DataSource) {
+        self.dataSource = dataSource
+    }
+
+    func displayData() {
+        let data = dataSource.fetchData()
+        print("Fetched data: \(data)")
+    }
+}
+
+// A concrete implementation of the DataSource protocol
+class RemoteDataSource: DataSource {
+    func fetchData() -> String {
+        return "Data from remote server"
+    }
+}
+
+// Another concrete implementation of the DataSource protocol
+class LocalDataSource: DataSource {
+    func fetchData() -> String {
+        return "Data from local storage"
+    }
+}
+```
+
+- To use the `DataManager` in your code, you can follow these steps:
+
+```swift
+// Create instances of the data sources
+let remoteDataSource = RemoteDataSource()
+let localDataSource = LocalDataSource()
+
+// Create an instance of DataManager with a remote data source
+let dataManager = DataManager(dataSource: remoteDataSource)
+dataManager.displayData() // Output: Fetched data: Data from remote server
+
+// Create another instance of DataManager with a local data source
+let anotherDataManager = DataManager(dataSource: localDataSource)
+anotherDataManager.displayData() // Output: Fetched data: Data from local storage
+```
+
+
+### Positive aspects:
+
+1. `Testability`: With Dependency Injection, it's easy to provide mock or stub implementations of dependencies during testing, allowing for comprehensive unit testing.
+
+2. `Modularity and reusability`: By injecting dependencies, components become more modular and can be reused in different contexts or scenarios.
+
+3. `Flexibility`: Dependency Injection makes it easier to switch or substitute dependencies without modifying the consuming class. This promotes flexibility and makes the code more maintainable.
+
+
+### Negative aspects:
+
+1. `Increased complexity`: Introducing Dependency Injection can add complexity to the codebase, especially in larger projects. Managing dependencies, their lifecycles, and configuration can become challenging.
+
+2. `Indirect dependencies`: Dependency Injection can result in a chain of dependencies, making it harder to trace and understand the flow of data throughout the application.
+
+3. `Increased setup and boilerplate code`: Dependency Injection often requires writing additional code for dependency management, configuration, and injection, which can increase the overall codebase size.
+
+
+### Conclusions:
+
+- Dependency Injection is a powerful design pattern that promotes loose coupling, testability, and modularity.
+- By allowing dependencies to be injected from the outside, it enhances flexibility and makes the code more maintainable.
+- However, it's important to strike a balance and carefully consider the complexity and overhead it introduces to ensure the benefits outweigh the drawbacks.
+
+- Remember, the specific implementation and usage of Dependency Injection can vary based on the requirements and architectural choices of your iOS project.
