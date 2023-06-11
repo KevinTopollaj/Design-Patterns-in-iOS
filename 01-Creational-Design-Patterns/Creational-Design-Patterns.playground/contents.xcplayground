@@ -4,5 +4,6 @@
         <page name='01-Singleton'/>
         <page name='02-Factory Method'/>
         <page name='03-Dependency Injection'/>
+        <page name='04-Abstract Factory'/>
     </pages>
 </playground>
