@@ -7,6 +7,7 @@
 * [Factory Method](#Factory-Method)
 * [Dependency Injection](#Dependency-Injection)
 * [Abstract Factory](#Abstract-Factory)
+* [Builder](#Builder)
 
 
 
@@ -545,4 +546,128 @@ Mexican dessert: Churros
 
 
 
+
+## Builder
+
+- The Builder Design Pattern is a creational design pattern that provides a way to construct complex objects step by step.
+- It separates the construction of an object from its representation, allowing for more control and flexibility in the construction process.
+- The pattern is especially useful when dealing with objects that have many configurable parameters.
+
+
+### Implementation
+
+- Let's consider an example where we have a `Car` object that needs to be constructed.
+- The `Car` object has various properties such as `brand`, `model`, `color`, `engineType`, and `numberOfDoors`.
+- We'll implement the Builder Design Pattern to construct the `Car` object:
+
+```swift
+struct Car {
+  let brand: String
+  let model: String
+  let color: String
+  let engineType: String
+  let numberOfDoors: Int
+}
+```
+
+```swift
+enum BuilderError: Error {
+    case incompleteData
+}
+```
+
+```swift
+class CarBuilder {
+  private var brand: String?
+  private var model: String?
+  private var color: String?
+  private var engineType: String?
+  private var numberOfDoors: Int?
+
+  func setBrand(_ brand: String) -> CarBuilder {
+    self.brand = brand
+    return self
+  }
+
+  func setModel(_ model: String) -> CarBuilder {
+    self.model = model
+    return self
+  }
+
+  func setColor(_ color: String) -> CarBuilder {
+    self.color = color
+    return self
+  }
+
+  func setEngineType(_ engineType: String) -> CarBuilder {
+    self.engineType = engineType
+    return self
+  }
+
+  func setNumberOfDoors(_ numberOfDoors: Int) -> CarBuilder {
+    self.numberOfDoors = numberOfDoors
+    return self
+  }
+
+  func build() throws -> Car {
+    guard let brand = brand,
+          let model = model,
+          let color = color,
+          let engineType = engineType,
+          let numberOfDoors = numberOfDoors else {
+      throw BuilderError.incompleteData
+    }
+
+    return Car(brand: brand, model: model,
+               color: color, engineType: engineType,
+               numberOfDoors: numberOfDoors)
+  }
+}
+```
+
+- In the above example, the `CarBuilder` class is responsible for constructing the `Car` object.
+- It provides methods to set each property of the `Car` object and returns a reference to the builder itself, enabling method chaining.
+- The `build()` method throws an error if any required data is missing, ensuring the builder enforces data completeness.
+
+- Here's an example usage of the builder pattern:
+
+```swift
+let carBuilder = CarBuilder()
+
+let car = try carBuilder
+                .setBrand("BMW")
+                .setModel("X5")
+                .setColor("Black")
+                .setEngineType("V8")
+                .setNumberOfDoors(4)
+                .build()
+```
+
+- In this example, we create a `CarBuilder` instance, chain the method calls to set the car's properties, and finally call `build()` to retrieve the constructed `Car` object.
+
+
+### Positive aspects:
+
+1. Encourages a clear separation between object construction and representation, promoting code maintainability.
+
+2. Provides a flexible and expressive way to construct objects, allowing for different configurations.
+
+3. Supports testability by enabling the creation and testing of various object variations.
+
+
+
+### Negative aspects:
+
+1. Introduces additional code for the builder, potentially increasing the overall complexity, especially for simpler objects.
+
+2. Requires careful handling of optional properties and error management during object construction.
+
+
+### Conclusions:
+
+- The Builder Design Pattern, when implemented with attention to best practices, offers a powerful and flexible approach to constructing complex objects.
+- It separates the construction process from the object's representation, facilitating code maintenance and testability.
+- However, it should be applied judiciously, considering the complexity and requirements of the project.
+
+- Remember, the implementation of design patterns should align with the specific needs and constraints of your application, and the `Builder` pattern is particularly useful when dealing with complex object creation that requires multiple steps and variations.
 
