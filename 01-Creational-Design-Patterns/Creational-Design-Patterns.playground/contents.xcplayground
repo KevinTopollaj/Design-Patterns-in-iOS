@@ -5,5 +5,7 @@
         <page name='02-Factory Method'/>
         <page name='03-Dependency Injection'/>
         <page name='04-Abstract Factory'/>
+        <page name='05-Builder'/>
+        <page name='06-Lazy Initialization'/>
     </pages>
 </playground>
