@@ -7,5 +7,6 @@
         <page name='04-Abstract Factory'/>
         <page name='05-Builder'/>
         <page name='06-Lazy Initialization'/>
+        <page name='07-Prototype'/>
     </pages>
 </playground>
