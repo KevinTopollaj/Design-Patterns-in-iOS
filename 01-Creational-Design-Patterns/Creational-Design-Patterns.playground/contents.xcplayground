@@ -8,5 +8,6 @@
         <page name='05-Builder'/>
         <page name='06-Lazy Initialization'/>
         <page name='07-Prototype'/>
+        <page name='08-Object Pool'/>
     </pages>
 </playground>

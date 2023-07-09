@@ -10,6 +10,7 @@
 * [Builder](#Builder)
 * [Lazy Initialization](#Lazy-Initialization)
 * [Prototype](#Prototype)
+* [Object Pool](#Object Pool)
 
 
 
@@ -865,3 +866,121 @@ let user1Profile = defaultProfile.clone().customize(username: "User1",
 - Remember to adapt the implementation to your specific use case and project requirements.
 
 
+
+
+## Object Pool
+
+- The Object Pool design pattern is a creational pattern that aims to improve performance and resource utilization by reusing objects instead of creating new ones.
+- It maintains a pool of initialized objects and provides a way to request and release these objects.
+- This can be particularly useful in scenarios where object creation is expensive, such as database connections, network connections, or expensive computations.
+
+
+### Implementation:
+
+- Let's implement an Object Pool for managing database connections in an iOS application:
+
+```swift
+// 1. Create a DatabaseConnection class as a reusable resource
+
+class DatabaseConnection {
+  private let connectionString: String
+
+  init(connectionString: String) {
+    self.connectionString = connectionString
+    // Perform expensive initialization here, e.g., establish a connection to the database
+  }
+
+  func executeQuery(_ query: String) {
+    // Execute the database query
+    // ...
+  }
+}
+```
+
+```swift
+// 2. Create a DatabaseConnectionPool class to manage DatabaseConnection objects
+class DatabaseConnectionPool {
+  private let maxConnections: Int
+  private var availableConnections: [DatabaseConnection] = []
+  private var inUseConnections: [DatabaseConnection] = []
+
+  init(maxConnections: Int, connectionString: String) {
+    self.maxConnections = maxConnections
+
+    for _ in 0..<maxConnections {
+      let connection = DatabaseConnection(connectionString: connectionString)
+      availableConnections.append(connection)
+    }
+  }
+
+  func getConnection() -> DatabaseConnection? {
+    guard !availableConnections.isEmpty else {
+      return nil // Pool is empty, return nil or wait for a connection to become available
+    }
+
+    let connection = availableConnections.removeLast()
+    inUseConnections.append(connection)
+    return connection
+  }
+
+  func releaseConnection(_ connection: DatabaseConnection) {
+    if let index = inUseConnections.firstIndex(where: { $0 === connection }) {
+      let connection = inUseConnections.remove(at: index)
+      availableConnections.append(connection)
+    }
+  }
+}
+```
+
+```swift
+// Step 3: Initialize the pool
+let maxConnections = 10
+let connectionString = "your_database_connection_string"
+let connectionPool = DatabaseConnectionPool(maxConnections: maxConnections,
+                                            connectionString: connectionString)
+```
+
+```swift
+// Step 4: Acquire and release objects
+if let connection = connectionPool.getConnection() {
+  // Use the connection for your database operations
+  // ...
+  connectionPool.releaseConnection(connection)
+} else {
+  // Handle the case when no connections are available
+  // ...
+}
+```
+
+
+
+### Positive aspects:
+
+1. Reusing objects instead of creating new ones can significantly improve performance and resource utilization.
+
+2. Object pools can be particularly beneficial in scenarios where object creation is expensive, such as network or database connections.
+
+3. The pattern helps to limit the number of objects created, which can be crucial in memory-constrained environments.
+
+
+
+
+### Negative aspects:
+
+1. The Object Pool pattern introduces additional complexity to manage the lifecycle and availability of pooled objects, including handling connection timeouts and failures.
+
+2. It may not be suitable for scenarios where the overhead of creating new connections is low, or if the connection initialization has complex requirements.
+
+3. Pool management can be challenging in multi-threaded environments, requiring synchronization mechanisms to handle concurrent access to connections.
+
+
+
+
+### Conclusions:
+
+- The Object Pool design pattern provides a way to efficiently manage and reuse objects, resulting in improved performance and resource utilization.
+- By recycling objects instead of creating new ones, the pattern can be beneficial in scenarios where object creation is expensive.
+- However, it's essential to carefully manage the pool size and consider the potential overhead and complexity introduced by the pattern.
+
+- Remember, the implementation and considerations provided above are a simplified example to illustrate the Object Pool pattern.
+- In real-world scenarios, you might need to adapt the implementation to fit your specific requirements and design constraints.
