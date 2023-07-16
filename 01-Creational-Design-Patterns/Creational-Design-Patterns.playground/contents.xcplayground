@@ -9,5 +9,6 @@
         <page name='06-Lazy Initialization'/>
         <page name='07-Prototype'/>
         <page name='08-Object Pool'/>
+        <page name='09-Service Locator'/>
     </pages>
 </playground>

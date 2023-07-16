@@ -11,6 +11,7 @@
 * [Lazy Initialization](#Lazy-Initialization)
 * [Prototype](#Prototype)
 * [Object Pool](#Object-Pool)
+* [Service Locator](#Service-Locator)
 
 
 
@@ -984,3 +985,135 @@ if let connection = connectionPool.getConnection() {
 
 - Remember, the implementation and considerations provided above are a simplified example to illustrate the Object Pool pattern.
 - In real-world scenarios, you might need to adapt the implementation to fit your specific requirements and design constraints.
+
+
+
+
+## Service Locator
+
+- The Service Locator design pattern provides a centralized registry or directory to locate and retrieve services or dependencies within an application.
+- It promotes loose coupling by allowing clients to request services through an abstraction, rather than directly depending on specific implementations.
+
+- The key components of the `Service Locator` pattern are:
+
+1. `Service Locator`: Acts as a central registry or directory, responsible for registering and providing services based on client requests.
+
+2. `Service`: Represents an interface or protocol that defines the contract for services. Clients depend on these abstractions rather than concrete implementations.
+
+3. `Concrete Services`: Actual implementations of the services that conform to the service interface or protocol. They are registered with the Service Locator and retrieved by clients as needed.
+
+
+### Implementation:
+
+- Let's consider an example of an iOS app that requires authentication services for login.
+- We'll implement the `Service Locator` pattern to decouple the app's code from specific authentication service implementations.
+
+- First, define the service protocol and its concrete implementations:
+
+```swift
+// Service protocol
+protocol AuthenticationService {
+  func login(username: String, password: String) -> Bool
+}
+
+// Concrete implementation of AuthenticationService
+class FirebaseAuthenticationService: AuthenticationService {
+
+  func login(username: String, password: String) -> Bool {
+    print("Logged in using Firebase")
+    return true
+  }
+
+}
+```
+
+- Next, create the `Service Locator` responsible for registering and retrieving authentication services:
+
+```swift
+class ServiceLocator {
+  static let shared = ServiceLocator()
+
+  private var services: [String: AuthenticationService] = [:]
+
+  private init() {}
+
+  func registerService(_ service: AuthenticationService) {
+    let key = String(describing: type(of: service))
+    services[key] = service
+  }
+
+  func getService<T>() -> T? {
+    let key = String(describing: T.self)
+    return services[key] as? T
+  }
+}
+```
+
+- In the iOS app, we can utilise the Service Locator for authentication:
+
+```swift
+class AuthenticationManager {
+  private let authenticationService: AuthenticationService
+
+  init(authenticationService: AuthenticationService) {
+    self.authenticationService = authenticationService
+  }
+
+  func login(username: String, password: String) -> Bool {
+    return authenticationService.login(username: username,
+                                       password: password)
+  }
+
+}
+
+ServiceLocator.shared.registerService(FirebaseAuthenticationService())
+
+guard let service = ServiceLocator.shared.getService() as FirebaseAuthenticationService? else {
+  fatalError("No authentication service found")
+}
+
+let authenticationManager = AuthenticationManager(authenticationService: service)
+
+let success = authenticationManager.login(username: "user123",
+                                          password: "password123")
+if success {
+  print("Login successful")
+} else {
+  print("Login failed")
+}
+```
+
+
+
+
+### Positive aspects:
+
+1. `Loose Coupling`: The Service Locator pattern decouples clients from specific service implementations, allowing for easier swapping of implementations without changing client code.
+
+2. `Improved Testability`: With the Service Locator, it's simpler to mock or stub service implementations during unit testing, enabling thorough TDD practices.
+
+3. `Centralized Configuration`: The Service Locator provides a central point for managing and configuring services, simplifying the initialization and setup of dependencies.
+
+
+
+
+### Negative aspects:
+
+1. `Hidden Dependencies`: The Service Locator can introduce hidden dependencies since clients rely on the Service Locator to retrieve services. This can make it harder to determine the actual dependencies of a class.
+
+3. `Global State`: Using a shared Service Locator introduces global state, making it more challenging to reason about and test application behavior.
+
+4. `Complexity`: The Service Locator pattern adds an extra layer of complexity to the application, potentially making code harder to understand and maintain.
+
+
+
+
+### Conclusions:
+
+- The Service Locator design pattern provides a centralised mechanism to manage dependencies in iOS apps, promoting loose coupling and facilitating easy swapping of implementations.
+- It enhances testability by enabling the use of mocks or stubs during unit testing.
+
+- However, it's important to consider the potential downsides, such as hidden dependencies and increased complexity.
+- The Service Locator pattern should be used judiciously, and alternative dependency injection approaches (e.g., constructor injection) should be considered based on the specific needs and complexity of the application.
+
+- In conclusion, the Service Locator pattern offers flexibility and modularity, but its usage should be weighed against the potential drawbacks, ensuring that the pattern aligns with the goals and requirements of the iOS application.
