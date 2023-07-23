@@ -12,6 +12,7 @@
 * [Prototype](#Prototype)
 * [Object Pool](#Object-Pool)
 * [Service Locator](#Service-Locator)
+* [Multiton](#Multiton)
 
 
 
@@ -1117,3 +1118,108 @@ if success {
 - The Service Locator pattern should be used judiciously, and alternative dependency injection approaches (e.g., constructor injection) should be considered based on the specific needs and complexity of the application.
 
 - In conclusion, the Service Locator pattern offers flexibility and modularity, but its usage should be weighed against the potential drawbacks, ensuring that the pattern aligns with the goals and requirements of the iOS application.
+
+
+
+
+## Multiton
+
+- The `Multiton Design Pattern` is a variation of the `Singleton` pattern that allows for the creation of multiple instances (multiple singletons) associated with unique keys or identifiers.
+- Each instance is unique based on its key, and subsequent requests for an instance with the same key will return the previously created instance.
+- This pattern is useful when you want to manage a limited number of objects, each representing a distinct resource, component, or configuration.
+
+
+### Implementation:
+
+- Let's implement a `Multiton` pattern for a hypothetical iOS app that manages different themes for its user interface.
+- We'll create a `ThemeManager` class that will be responsible for handling multiple instances of theme objects, each associated with a unique theme name.
+
+```swift
+// Create a shared protocol for themes
+protocol Theme: Equatable {
+  var backgroundColor: UIColor { get }
+  var textColor: UIColor { get }
+}
+
+// Implement different themes conforming to the Theme protocol
+struct LightTheme: Theme {
+  var backgroundColor: UIColor = .white
+  var textColor: UIColor = .black
+}
+
+struct DarkTheme: Theme {
+  var backgroundColor: UIColor = .black
+  var textColor: UIColor = .white
+}
+
+// Implement custom equality comparison for Theme instances
+func ==(lhs: any Theme, rhs: any Theme) -> Bool {
+  return lhs.backgroundColor == rhs.backgroundColor &&
+         lhs.textColor == rhs.textColor
+}
+```
+
+```swift
+// Make ThemeManager a struct for value semantics.
+struct ThemeManager {
+
+  enum ThemeColor {
+    case light
+    case dark
+  }
+
+  // Private initializer to prevent external instantiation
+  private init() {}
+
+  // Static constant to hold the shared instance
+  static var shared = ThemeManager()
+
+  private var themes: [ThemeColor: any Theme] = [
+    .light: LightTheme(),
+    .dark: DarkTheme()
+  ]
+
+  // Function to retrieve themes from the dictionary
+  func theme(for themeColor: ThemeColor) -> any Theme {
+    return themes[themeColor] ?? LightTheme() // Default to LightTheme if not found
+  }
+}
+
+// Usage:
+
+let lightTheme = ThemeManager.shared.theme(for: .light)
+let darkTheme = ThemeManager.shared.theme(for: .dark)
+let anotherLightTheme = ThemeManager.shared.theme(for: .light)
+
+print(lightTheme == anotherLightTheme) // Output: true (both instances are the same)
+print(lightTheme == darkTheme) // Output: false (instances are different, based on their keys)
+```
+
+
+### Positive aspects:
+
+1. `Multiple Instances`: The Multiton pattern allows us to have multiple instances of a class, each corresponding to a specific key or identifier. This enables us to manage various configurations without breaking the Singleton pattern's single instance constraint.
+
+2. `Resource Management`: The pattern helps manage resources that are associated with distinct keys, making it suitable for scenarios like managing themes, database connections, or network configurations.
+
+
+
+### Negative aspects:
+
+1. `Complexity`: The Multiton pattern can introduce additional complexity to the codebase, especially when handling shared resources among multiple instances.
+
+2. `Maintenance`: With multiple instances, the application's state can become harder to track and maintain, leading to potential issues with memory management or resource leaks.
+
+3. `Global State`: Like the Singleton pattern, Multiton introduces global state, which might make unit testing more challenging as it can create dependencies between different parts of the application.
+
+
+
+### Conclusions:
+
+- The Multiton Design Pattern can be a powerful tool when you need multiple instances of an object associated with unique keys in your iOS app.
+- It is useful for managing different configurations, resources, and themes, while avoiding the constraints of a traditional Singleton pattern.
+
+- However, like any design pattern, it should be used judiciously.
+- It introduces a global state and can increase complexity, making it harder to maintain and test.
+- Therefore, consider the trade-offs and carefully evaluate whether the Multiton pattern is the best fit for your specific use case.
+- If managed properly, it can provide an elegant solution for managing multiple instances of a class based on distinct keys.

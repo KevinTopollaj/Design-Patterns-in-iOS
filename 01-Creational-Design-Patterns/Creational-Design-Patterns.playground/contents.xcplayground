@@ -10,5 +10,6 @@
         <page name='07-Prototype'/>
         <page name='08-Object Pool'/>
         <page name='09-Service Locator'/>
+        <page name='10-Multiton'/>
     </pages>
 </playground>
