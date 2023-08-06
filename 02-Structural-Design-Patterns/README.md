@@ -4,6 +4,7 @@
 
 * [Intro](#Intro)
 * [Adapter](#Adapter)
+* [Decorator](#Decorator)
 
 
 
@@ -156,5 +157,119 @@ let weatherString = providerService.getCurrentWeather()
 - Additionally, applying TDD principles to the adapter implementation will help guarantee its correctness and reliability.
 
 
+
+
+## Decorator
+
+- The `Decorator` Design Pattern is a structural pattern that allows you to dynamically add additional behavior or responsibilities to objects without modifying their structure.
+- It is useful when you need to extend the functionality of a class in a flexible and reusable way.
+- The pattern involves creating a set of decorator classes that wrap the original class and provide additional features.
+
+
+### Implementation:
+
+- Let's consider a real-world example where we have a basic iOS application that provides different types of beverages (e.g., coffee).
+- We want to offer various extras or toppings (e.g., milk, sugar) that can be added to the beverage.
+- Instead of creating separate classes for each combination of the beverage and toppings, we'll use the `Decorator` pattern.
+
+- First, let's define the base protocol for the beverage:
+
+```swift
+protocol BeverageComponent {
+  func cost() -> Double
+  func description() -> String
+}
+```
+
+- Next, we implement a concrete beverage class:
+
+```swift
+class Coffee: BeverageComponent {
+  func cost() -> Double {
+    return 2.0
+  }
+
+  func description() -> String {
+    return "Coffee"
+  }
+}
+```
+
+- Now, let's create the decorator classes for toppings:
+
+```swift
+class SugarDecorator: BeverageComponent {
+  private let baseBeverage: BeverageComponent
+
+  init(baseBeverage: BeverageComponent) {
+    self.baseBeverage = baseBeverage
+  }
+
+  func cost() -> Double {
+    return baseBeverage.cost() + 0.25
+  }
+
+  func description() -> String {
+    return baseBeverage.description() + ", Sugar"
+  }
+}
+
+class MilkDecorator: BeverageComponent {
+  private let baseBeverage: BeverageComponent
+
+  init(baseBeverage: BeverageComponent) {
+    self.baseBeverage = baseBeverage
+  }
+
+  func cost() -> Double {
+    return baseBeverage.cost() + 0.5
+  }
+
+  func description() -> String {
+    return baseBeverage.description() + ", Milk"
+  }
+}
+```
+
+- This is how we can initialise and use them together:
+
+```swift
+let coffee = Coffee()
+print(coffee.description(), ":", coffee.cost())
+
+let sugarDecorator = SugarDecorator(baseBeverage: coffee)
+print(sugarDecorator.description(), ":", sugarDecorator.cost())
+
+let milkDecorator = MilkDecorator(baseBeverage: sugarDecorator)
+print(milkDecorator.description(), ":", milkDecorator.cost())
+```
+
+
+
+### Positive aspects:
+
+1- `Flexibility`: The Decorator pattern allows us to add or remove decorations dynamically at runtime without modifying the original classes, making it easy to mix and match functionalities.
+
+2- `Reusability`: Decorators are independent and can be reused in different contexts, providing different combinations of behavior to different objects.
+
+3- `Open/Closed Principle`: The pattern follows the Open/Closed Principle, as it allows extending the behavior of classes without modifying their code, reducing the risk of introducing bugs in existing functionality.
+
+
+### Negative aspects:
+
+1- `Complexity`: The Decorator pattern can lead to a large number of classes when multiple decorators are used, potentially making the codebase harder to manage.
+
+2- `Order of wrapping`: The order in which decorators are applied can affect the final result, which may lead to unintended behavior if not carefully managed.
+
+3- `Maintenance`: If the base component's interface changes, it can impact the decorators, requiring modifications in multiple classes.
+
+
+
+### Conclusions:
+
+
+- The Decorator pattern is a powerful tool for enhancing the behavior of objects in a flexible and dynamic way.
+- It allows us to avoid class explosion and provides a cleaner approach to extend functionalities compared to traditional subclassing.
+- However, it should be used judiciously, and careful consideration should be given to the order of decorators to achieve the desired result.
 
 
