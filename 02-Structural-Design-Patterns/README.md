@@ -5,6 +5,7 @@
 * [Intro](#Intro)
 * [Adapter](#Adapter)
 * [Decorator](#Decorator)
+* [Facade](#Facade)
 
 
 
@@ -271,5 +272,116 @@ print(milkDecorator.description(), ":", milkDecorator.cost())
 - The Decorator pattern is a powerful tool for enhancing the behavior of objects in a flexible and dynamic way.
 - It allows us to avoid class explosion and provides a cleaner approach to extend functionalities compared to traditional subclassing.
 - However, it should be used judiciously, and careful consideration should be given to the order of decorators to achieve the desired result.
+
+
+
+## Facade
+
+- The Facade pattern is a structural design pattern that provides a simplified interface to a complex subsystem, making it easier to use and understand.
+
+- The Facade pattern hides the complexities of a system and provides a unified interface to interact with it.
+- It's like a simplified "facade" or front-end that shields clients from the underlying intricacies, making the codebase more maintainable and easier to use.
+
+### Implementation:
+
+- Suppose we are developing an iOS app for a music streaming service.
+- This service has various subsystems such as authentication and playlist management.
+- We'll use the Facade pattern to simplify interactions with these subsystems.
+
+```swift
+// Subsystem: Authentication
+protocol AuthServiceProtocol {
+  func login(username: String, password: String) -> Bool
+}
+
+class AuthService: AuthServiceProtocol {
+  func login(username: String, password: String) -> Bool {
+    // Simulate authentication logic
+    return username == "Bob" && password == "bob123"
+  }
+}
+
+// Subsystem: Playlist Management
+protocol PlaylistServiceProtocol {
+  func createPlaylist(name: String) -> String
+}
+
+class PlaylistService: PlaylistServiceProtocol {
+  func createPlaylist(name: String) -> String {
+    // Simulate playlist creation logic
+    return "Playlist '\(name)' created"
+  }
+}
+```
+
+```swift
+// Facade
+class MusicAppFacade {
+  private let authService: AuthServiceProtocol
+  private let playlistService: PlaylistServiceProtocol
+
+  init(authService: AuthServiceProtocol,
+       playlistService: PlaylistServiceProtocol) {
+
+    self.authService = authService
+    self.playlistService = playlistService
+  }
+
+  func createPlaylist(username: String,
+                      password: String,
+                      playlistName: String) -> Result<String, Error> {
+
+    if authService.login(username: username, password: password) {
+      let welcomeMessage = "Welcome to the music app: \(username)"
+      let playlist = playlistService.createPlaylist(name: playlistName)
+      return .success("\(welcomeMessage)\n\(playlist)")
+    } else {
+      return .failure(NSError(domain: "LoginErrorDomain", code: 1, userInfo: nil))
+    }
+  }
+}
+```
+
+```swift
+// Usage
+let authService = AuthService()
+let playlistService = PlaylistService()
+let musicApp = MusicAppFacade(authService: authService,
+                              playlistService: playlistService)
+
+switch musicApp.createPlaylist(username: "Bob",
+                               password: "bob123",
+                               playlistName: "My Favorites") {
+case .success(let result):
+  print(result)
+case .failure(let error):
+  print("Action failed. Error: \(error)")
+}
+```
+
+
+### Positive aspects:
+
+1- `Simplified Interface`: The Facade pattern provides a clear and concise interface to interact with complex subsystems, reducing the cognitive load for developers using the system.
+
+2- `Code Organization`: The pattern promotes clean code separation, making the subsystems' implementation details less exposed.
+
+3- `Ease of Use`: Clients only need to interact with the facade, reducing the need to understand the intricate details of each subsystem.
+
+
+### Negative aspects:
+
+1- `Limited Customization`: The Facade pattern can hide certain functionalities that advanced users might want to customize.
+
+2- `Increased Coupling`: While the facade reduces coupling between clients and subsystems, it can lead to increased coupling between the facade and the subsystems.
+
+3- `Abstraction Leakage`: If the facade isn't designed carefully, changes to the subsystems might necessitate changes to the facade, potentially defeating the purpose of simplification.
+
+
+### Conclusions:
+
+- The Facade pattern proves invaluable when dealing with complex systems by providing a simplified interface for clients.
+- It promotes the separation of concerns, reduces complexity, and enhances maintainability.
+- However, it's important to strike a balance between encapsulation and customization to ensure the pattern doesn't hinder the system's extensibility and flexibility.
 
 
