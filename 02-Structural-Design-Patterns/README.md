@@ -6,6 +6,7 @@
 * [Adapter](#Adapter)
 * [Decorator](#Decorator)
 * [Facade](#Facade)
+* [Flyweight](#Flyweight)
 
 
 
@@ -384,4 +385,115 @@ case .failure(let error):
 - It promotes the separation of concerns, reduces complexity, and enhances maintainability.
 - However, it's important to strike a balance between encapsulation and customization to ensure the pattern doesn't hinder the system's extensibility and flexibility.
 
+
+
+
+## Flyweight
+
+- The Flyweight Design Pattern is a structural design pattern that is used to minimize memory usage or computational expenses by sharing as much as possible with related objects.
+- It is particularly useful when you need to create a large number of similar objects, which can be split into two parts: `intrinsic` and `extrinsic` state.
+
+1. `Intrinsic State`: This is the part of the object's state that is shared among multiple objects. It's usually immutable and can be shared freely. Intrinsic state is stored in the flyweight objects.
+
+2. `Extrinsic State`: This is the part of the object's state that varies and cannot be shared. It is usually passed as a parameter to the flyweight objects.
+
+
+
+### Implementation:
+
+
+```swift
+// Concrete Flyweight
+
+class CircleFlyweight {
+  let color: UIColor
+  let radius: CGFloat
+
+  init(color: UIColor, radius: CGFloat) {
+    self.color = color
+    self.radius = radius
+  }
+}
+```
+
+```swift
+// Create a Factory to Manage Flyweights
+
+class CircleFlyweightFactory {
+  private var flyweights: [String: CircleFlyweight] = [:]
+
+  func getCircleFlyweight(color: UIColor) -> CircleFlyweight {
+    let key = color.description
+
+    if let existingFlyweight = flyweights[key] {
+      return existingFlyweight
+    } else {
+      // Shared properties
+      let newFlyweight = CircleFlyweight(color: color, radius: 10.0)
+      flyweights[key] = newFlyweight
+      return newFlyweight
+    }
+  }
+
+}
+```
+
+```swift
+class Circle {
+  let position: CGPoint
+  let flyweight: CircleFlyweight
+
+  init(position: CGPoint, flyweight: CircleFlyweight) {
+    self.position = position
+    self.flyweight = flyweight
+  }
+
+  func draw() {
+    print("Drawing a circle at \(position) with radius \(flyweight.radius) and color \(flyweight.color).")
+  }
+}
+```
+
+
+```swift
+// Usage
+let flyweightFactory = CircleFlyweightFactory()
+
+let circle1 = Circle(position: CGPoint(x: 10, y: 10),
+                     flyweight: flyweightFactory.getCircleFlyweight(color: .red))
+let circle2 = Circle(position: CGPoint(x: 20, y: 20),
+                     flyweight: flyweightFactory.getCircleFlyweight(color: .red))
+
+circle1.draw() // Both circles will share the same flyweight
+circle2.draw()
+```
+
+
+
+### Positive aspects:
+
+1. `Memory Efficiency`: The Flyweight pattern reduces memory usage by sharing common state across multiple objects.
+
+2. `Performance Improvement`: It can lead to performance improvements by reducing the number of objects that need to be created and managed.
+
+3. `Scalability`: It makes it easier to scale applications when dealing with a large number of objects with shared state.
+
+
+
+### Negative aspects:
+
+1. `Complexity`: Introducing the Flyweight pattern can make the code more complex, especially when managing the intrinsic and extrinsic states.
+
+2. `Reduced Encapsulation`: The pattern requires sharing state, which can reduce encapsulation if not managed properly.
+
+3. `Potential Overhead`: In some cases, the overhead of managing the flyweight objects may outweigh the benefits, especially if the number of shared states is small.
+
+
+
+### Conclusions:
+
+- The Flyweight Design Pattern is a powerful tool for optimizing memory usage and improving performance in situations where many objects share common state.
+- However, it should be applied judiciously, as it can add complexity to the codebase.
+- It's most effective in scenarios where a large number of similar objects need to be managed efficiently while keeping memory usage in check.
+- When implemented correctly, it can lead to significant improvements in the efficiency of an iOS application.
 

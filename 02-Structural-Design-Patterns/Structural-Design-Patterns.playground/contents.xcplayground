@@ -4,5 +4,6 @@
         <page name='01-Adapter'/>
         <page name='02-Decorator'/>
         <page name='03-Facade'/>
+        <page name='04-Flyweight'/>
     </pages>
 </playground>
