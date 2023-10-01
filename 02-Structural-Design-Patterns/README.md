@@ -736,7 +736,6 @@ view2.display()
 
 2. `Performance`: Depending on the implementation, traversing a deep composite structure can be inefficient.
 
-3. `Limited Type Safety`: In dynamically typed languages, type safety may not be guaranteed.
 
 
 
