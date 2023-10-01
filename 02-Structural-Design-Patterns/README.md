@@ -629,8 +629,6 @@ brush.draw(shape: rectangle)
 
 - The Composite Design Pattern is a structural design pattern that allows you to compose objects into tree structures to represent hierarchies.
 
-- It's useful when you need to treat individual objects and compositions of objects uniformly.
-
 - In the context of iOS app development, we can use this pattern to build hierarchical UI components or manage complex structures of data.
 
 - The Composite Design Pattern consists of three key components:
