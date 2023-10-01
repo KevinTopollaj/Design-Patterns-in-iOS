@@ -8,6 +8,7 @@
 * [Facade](#Facade)
 * [Flyweight](#Flyweight)
 * [Bridge](#Bridge)
+* [Composite](#Composite)
 
 
 
@@ -620,3 +621,129 @@ brush.draw(shape: rectangle)
 
 - When employed correctly, it leads to more modular and maintainable iOS applications.
 - TDD can be added as a valuable companion to ensure that your implementations adhere to the intended design and continue to function correctly as your codebase evolves.
+
+
+
+
+## Composite
+
+- The Composite Design Pattern is a structural design pattern that allows you to compose objects into tree structures to represent hierarchies.
+
+- It's useful when you need to treat individual objects and compositions of objects uniformly.
+
+- In the context of iOS app development, we can use this pattern to build hierarchical UI components or manage complex structures of data.
+
+- The Composite Design Pattern consists of three key components:
+
+1. `Component`: This is an abstract class or protocol that defines the common interface for `leaf` and `composite` objects. It usually includes methods like `display` or `render`.
+
+2. `Leaf`: These are the individual objects that implement the `Component` interface. They don't have any child components.
+
+3. `Composite`: These are complex objects that also implement the `Component` interface but can contain child components. Composites manage a collection of child components, which can be either `leaves` or other `composites`.
+
+
+
+
+### Implementation:
+
+- Let's implement the Composite Pattern in the context of a graphical user interface where we have a hierarchy of UI elements.
+
+```swift
+// Step 1: Create the Component protocol
+protocol UIComponent {
+  func display()
+}
+```
+
+```swift
+// Step 2: Implement Leaf objects
+class UIButton: UIComponent {
+  var label: String
+
+  init(label: String) {
+    self.label = label
+  }
+
+  func display() {
+    print("Button: \(label)")
+  }
+}
+
+class UILabel: UIComponent {
+  var text: String
+
+  init(text: String) {
+    self.text = text
+  }
+
+  func display() {
+    print("Label: \(text)")
+  }
+}
+```
+
+```swift
+// Step 3: Implement Composite object
+class UIView: UIComponent {
+  var children: [UIComponent] = []
+
+  func add(child: UIComponent) {
+    children.append(child)
+  }
+
+  func display() {
+    for child in children {
+      child.display()
+    }
+  }
+}
+```
+
+```swift
+// Usage
+let view1 = UIView()
+let label = UILabel(text: "Welcome!")
+let button = UIButton(label: "Click Me")
+
+view1.add(child: label)
+view1.add(child: button)
+
+let view2 = UIView()
+let anotherButton = UIButton(label: "Submit")
+
+view2.add(child: view1)
+view2.add(child: anotherButton)
+
+view2.display()
+```
+
+
+
+### Positive aspects:
+
+1. `Composition`: It allows you to build complex structures from simple objects through composition.
+
+2. `Uniformity`: It enables clients to treat individual objects and compositions of objects uniformly.
+
+3. `Hierarchical Structures`: Great for representing hierarchical data or UI components.
+
+4. `Open-Closed Principle`: You can add new component types without altering existing code.
+
+
+
+
+### Negative aspects:
+
+1. `Complexity`: Overusing the Composite Pattern can make the code more complex.
+
+2. `Performance`: Depending on the implementation, traversing a deep composite structure can be inefficient.
+
+3. `Limited Type Safety`: In dynamically typed languages, type safety may not be guaranteed.
+
+
+
+### Conclusions:
+
+- The Composite Design Pattern is a powerful tool for building complex structures while keeping the code maintainable and extensible.
+- It's particularly useful in iOS app development for creating hierarchical UI elements or managing complex data structures.
+- However, like any design pattern, it should be used judiciously, considering the specific needs of your application.

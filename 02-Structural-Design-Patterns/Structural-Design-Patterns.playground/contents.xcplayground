@@ -6,5 +6,6 @@
         <page name='03-Facade'/>
         <page name='04-Flyweight'/>
         <page name='05-Bridge'/>
+        <page name='06-Composite'/>
     </pages>
 </playground>
