@@ -3,6 +3,7 @@
 ## Table of contents
 
 * [Intro](#Intro)
+* [Observer](#Observer)
 
 
 
@@ -37,3 +38,130 @@ These patterns help to define the relationships between objects and simplify the
 
 In conclusion, the behavioural design patterns in iOS provide a way to describe the behavior of objects in an iOS application.
 These patterns simplify the code, make it easier to maintain and modify, and allow for the creation of more complex applications.
+
+
+
+## Observer
+
+- Observer Design Pattern is a behavioral design pattern that defines a one-to-many dependency between objects.
+
+- It ensures that when one object (the Subject) changes its state, all its dependents (Observers) are notified and updated automatically.
+
+- This pattern is often used for implementing distributed event handling systems and is fundamental in various areas of software development.
+
+- In iOS, the Observer Design Pattern is used to create a mechanism where objects can subscribe to changes in another object, often used for implementing UI updates when underlying data changes.
+
+
+
+### Implementation:
+
+- Let's create a simple example of the Observer Design Pattern in iOS.
+
+- Let's take as an example a basic weather app where the temperature is the Subject being observed, and multiple displays (Observers) are updated when the temperature changes.
+
+- We define a `WeatherObserver` protocol to ensure that all observers implement the `update` method.
+
+```swift
+// 1. Define a protocol for observers
+
+protocol WeatherObserver: AnyObject {
+  func update(temperature: Double)
+}
+```
+
+- The `WeatherStation` class maintains a list of observers and notifies them when the temperature changes.
+
+```swift
+// 2. Create a WeatherStation class (subject)
+
+class WeatherStation {
+  private var temperature: Double = 0
+  private var observers = [WeatherObserver]()
+
+  func add(observer: WeatherObserver) {
+    observers.append(observer)
+  }
+
+  func remove(observer: WeatherObserver) {
+    observers = observers.filter { $0 !== observer }
+  }
+
+  func setTemperature(_ temperature: Double) {
+    self.temperature = temperature
+    notifyObservers()
+  }
+
+  private func notifyObservers() {
+    for observer in observers {
+      observer.update(temperature: temperature)
+    }
+  }
+}
+```
+
+- We create two observer classes: `ViewController1` and `ViewController2`.
+
+```swift
+// 3. Create observer classes
+
+class ViewController1: WeatherObserver {
+  func update(temperature: Double) {
+    print("VC 1: \(temperature)°C")
+  }
+}
+
+class ViewController2: WeatherObserver {
+  func update(temperature: Double) {
+    print("VC 2: Temperature is now \(temperature)°C")
+  }
+}
+```
+
+- We add the observers to the `WeatherStation`, and when the temperature is updated, all observers are notified and react accordingly.
+
+```swift
+// 4. Usage example
+let weatherStation = WeatherStation()
+let display1 = ViewController1()
+let display2 = ViewController2()
+
+weatherStation.add(observer: display1)
+weatherStation.add(observer: display2)
+
+weatherStation.setTemperature(25.5)
+
+weatherStation.remove(observer: display1)
+
+weatherStation.setTemperature(23.5)
+```
+
+
+### Positive aspects:
+
+1. `Decoupling`: The Observer pattern decouples the subject (WeatherStation) from its observers (ViewController1, ViewController2), making it easier to add or remove observers without affecting the subject.
+
+2. `Dynamic updates`: Observers receive updates automatically when the subject's state changes, allowing for real-time, dynamic behavior.
+
+3. `Reusability`: It promotes the reusability of both subjects and observers, as you can add new observers for different purposes.
+
+4. `Testability`: The pattern naturally supports TDD since you can write tests for observers and the subject's behavior separately.
+
+
+
+### Negative aspects:
+
+1. `Memory Management`: In the above example, we used a simple array to store observers. You need to be careful about strong reference cycles to prevent memory leaks. Use weak references or other memory management techniques when necessary.
+
+2. `Complexity`: In more complex scenarios, managing a large number of observers can become challenging. You may need to implement additional logic for managing observer lifecycles efficiently.
+
+
+
+### Conclusions:
+
+- The Observer Design Pattern is a valuable tool in iOS development for creating loosely coupled, event-driven systems.
+
+- It facilitates dynamic updates and enhances code maintainability.
+
+- However, it's essential to handle memory management properly.
+
+- When used correctly, it can significantly improve the modularity and maintainability of your code, allowing for better scalability and testability.
