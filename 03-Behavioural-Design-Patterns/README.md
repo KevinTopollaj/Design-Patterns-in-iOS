@@ -4,6 +4,7 @@
 
 * [Intro](#Intro)
 * [Observer](#Observer)
+* [Memento](#Memento)
 
 
 
@@ -165,3 +166,124 @@ weatherStation.setTemperature(23.5)
 - However, it's essential to handle memory management properly.
 
 - When used correctly, it can significantly improve the modularity and maintainability of your code, allowing for better scalability and testability.
+
+
+
+## Memento
+
+- The Memento Design Pattern is a behavioral pattern that allows you to capture and externalize the internal state of an object without violating encapsulation, and then later restore that object to its previous state.
+
+- It's often used in scenarios where you need to implement undo/redo functionality, maintain a history of an object's state, or simply save and restore an object's state.
+
+- The Memento pattern consists of three key participants:
+
+- `Originator`: This is the object whose state you want to save or restore.
+
+- `Memento`: This is an object that represents the state of the `Originator` at a specific point in time. It should be designed to be immutable, so the state can't be changed once it's stored.
+
+- `Caretaker`: The Caretaker is responsible for storing and managing the Mementos.
+
+
+
+### Implementation:
+
+- Let's implement the Memento pattern in the context of a simple iOS app for managing a to-do list.
+
+```swift
+// Originator - the object whose state needs to be saved
+
+class Task {
+  var title: String
+  var completed: Bool
+
+  init(title: String) {
+    self.title = title
+    self.completed = false
+  }
+
+  // Create a Memento to save the state
+  func createMemento() -> TaskMemento {
+    return TaskMemento(title: title, completed: completed)
+  }
+
+  // Restore the state from a Memento
+  func restore(from memento: TaskMemento) {
+    title = memento.title
+    completed = memento.completed
+  }
+}
+```
+
+```swift
+// Memento - represents the state of the object
+
+struct TaskMemento {
+  let title: String
+  let completed: Bool
+}
+```
+
+```swift
+// Caretaker class - is responsible for maintaining the history of the Task object's state.
+
+class TaskHistory {
+  private(set) var history: [TaskMemento] = []
+
+  func addMemento(_ memento: TaskMemento) {
+    history.append(memento)
+  }
+
+  func getMemento(at index: Int) -> TaskMemento {
+    return history[index]
+  }
+}
+```
+
+```swift
+// Example: @Kevin_Topollaj
+
+let task = Task(title: "Buy groceries")
+task.completed = true
+
+let memento = task.createMemento()
+
+let taskHistory = TaskHistory()
+taskHistory.addMemento(memento)
+
+let lastMemento = taskHistory.getMemento(at: taskHistory.history.count - 1)
+
+task.restore(from: lastMemento)
+
+print(task.title) // Buy groceries
+print(task.completed) // true
+```
+
+
+
+### Positive aspects:
+
+- `Undo/Redo`: The Memento pattern allows for easy implementation of undo and redo functionality.
+
+- `Encapsulation`: It preserves the encapsulation of the object's state by externalizing it into a Memento object.
+
+- `Snapshot`: You can take snapshots of an object's state at any point in time, which is useful for history tracking.
+
+- `Testability`: Using the Memento pattern promotes testability. You can test the Originator's state-saving and state-restoring functionality independently, which is in line with the principles of TDD.
+
+
+
+### Negative aspects:
+
+- `Memory Usage`: Storing multiple Mementos can consume memory, especially if you have many objects with extensive state.
+
+- `Complexity`: In cases where the objects have complex states, implementing the Memento pattern can lead to verbose code. Managing a large number of Mementos and their associated history can become challenging.
+
+
+
+### Conclusions:
+
+- The Memento Design Pattern in iOS is a powerful tool for managing and restoring an object's state while maintaining encapsulation.
+
+- It's particularly useful for scenarios like implementing undo/redo features.
+
+- However, it should be used judiciously, as it can increase memory usage when dealing with large objects, and the code can become more complex for objects with extensive state.
