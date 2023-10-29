@@ -5,6 +5,7 @@
 * [Intro](#Intro)
 * [Observer](#Observer)
 * [Memento](#Memento)
+* [Strategy](#Strategy)
 
 
 
@@ -287,3 +288,99 @@ print(task.completed) // true
 - It's particularly useful for scenarios like implementing undo/redo features.
 
 - However, it should be used judiciously, as it can increase memory usage when dealing with large objects, and the code can become more complex for objects with extensive state.
+
+
+
+
+## Strategy
+
+- The Strategy Design Pattern is a behavioral pattern that allows you to define a family of objects, encapsulate each one of them, and make them interchangeable.
+
+- It enables the client to choose the appropriate object dynamically at runtime without altering the context that uses these objects.
+
+- This pattern is especially useful when you have multiple ways to perform a specific task or when you want to decouple the client from the implementation details.
+
+
+
+### Implementation:
+
+- Let's implement a real-world example of a strategy pattern for a payment processing system in an iOS app.
+
+- We will create a strategy pattern for different payment methods (e.g., credit card, PayPal).
+
+```swift
+// 1. Define the strategy protocol
+protocol PaymentStrategy {
+  func processPayment(amount: Double)
+}
+
+// 2. Implement concrete payment strategies
+class CreditCardPayment: PaymentStrategy {
+  func processPayment(amount: Double) {
+    print("Processing credit card payment for $\(amount)")
+  }
+}
+
+class PayPalPayment: PaymentStrategy {
+  func processPayment(amount: Double) {
+    print("Processing PayPal payment for $\(amount)")
+  }
+}
+
+// 3. Create a context class that uses the strategy
+class PaymentProcessor {
+  private var paymentStrategy: PaymentStrategy
+
+  init(paymentStrategy: PaymentStrategy) {
+    self.paymentStrategy = paymentStrategy
+  }
+
+  func performPayment(amount: Double) {
+    paymentStrategy.processPayment(amount: amount)
+  }
+}
+
+// @Kevin_Topollaj
+
+// 4. Client code
+let orderAmount = 100.0
+
+let creditCardPayment = CreditCardPayment()
+let payPalPayment = PayPalPayment()
+
+let paymentProcessor1 = PaymentProcessor(paymentStrategy: creditCardPayment)
+paymentProcessor1.performPayment(amount: orderAmount)
+
+let paymentProcessor2 = PaymentProcessor(paymentStrategy: payPalPayment)
+paymentProcessor2.performPayment(amount: orderAmount)
+```
+
+
+
+### Positive aspects:
+
+- `Open-Closed Principle`: The Strategy Pattern allows you to add new payment methods or objects without modifying existing code, following the Open-Closed Principle.
+
+- `Highly Testable`: The pattern encourages the use of protocols, making it easy to write unit tests for each payment strategy independently.
+
+- `Clean and Readable Code`: The pattern promotes separation of concerns and cleaner code by isolating different strategies.
+
+
+
+### Negative aspects:
+
+- `Complexity`: For simple scenarios with only a few strategies, implementing the Strategy Pattern might introduce unnecessary complexity.
+
+- `Increased Number of Objects`: Introducing multiple strategies can lead to an increased number of objects, which might make the codebase harder to manage in very large projects.
+
+
+
+### Conclusions:
+
+- The Strategy Design Pattern is a powerful tool when you need to provide multiple interchangeable objects or behaviors in your iOS application.
+
+- It promotes clean, maintainable code and adheres to the SOLID principles.
+
+- However, it's essential to use it judiciously, considering the complexity it may add to your project.
+
+- Always aim for simplicity and readability while applying design patterns in your application.
