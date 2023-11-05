@@ -4,5 +4,6 @@
         <page name='01-Observer'/>
         <page name='02-Memento'/>
         <page name='03-Strategy'/>
+        <page name='04-Command'/>
     </pages>
 </playground>

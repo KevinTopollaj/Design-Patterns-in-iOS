@@ -6,6 +6,7 @@
 * [Observer](#Observer)
 * [Memento](#Memento)
 * [Strategy](#Strategy)
+* [Command](#Command)
 
 
 
@@ -384,3 +385,128 @@ paymentProcessor2.performPayment(amount: orderAmount)
 - However, it's essential to use it judiciously, considering the complexity it may add to your project.
 
 - Always aim for simplicity and readability while applying design patterns in your application.
+
+
+
+
+## Command
+
+- Is used to encapsulate a request as an object, thereby allowing for the parameterization of clients with different requests.
+
+- The client simply invokes a method on a command object, which executes the command at a later time.
+
+- This pattern typically consists of the following components:
+
+1. `Command`: Represents a request and contains all the necessary information to execute it. It defines an interface with an `execute` method.
+
+2. `Concrete Command`: Implements the `Command` interface and contains the specific behavior associated with the command.
+
+3. `Receiver`: Contains the code and data necessary for performing the action.
+
+4. `Invoker`: Invokes the command and manages the command's execution.
+
+
+
+### Implementation:
+
+- Let's say we're building a remote control for a home automation system.
+- We can use the Command Pattern to control different devices (e.g., lights, fans, or doors).
+- Here's an example implementation:
+
+```swift
+// 1. Command
+protocol Command {
+  func execute()
+}
+
+// 2. Concrete Commands
+class LightOnCommand: Command {
+  private let light: Light
+
+  init(light: Light) {
+    self.light = light
+  }
+
+  func execute() {
+    light.turnOn()
+  }
+}
+
+class LightOffCommand: Command {
+  private let light: Light
+
+  init(light: Light) {
+    self.light = light
+  }
+
+  func execute() {
+    light.turnOff()
+  }
+}
+
+// @Kevin_Topollaj
+
+// 3. Receiver
+class Light {
+  func turnOn() {
+    print("Light is on")
+  }
+
+  func turnOff() {
+    print("Light is off")
+  }
+}
+
+// 4. Invoker
+class RemoteControl {
+  private var command: Command?
+
+  func setCommand(command: Command) {
+    self.command = command
+  }
+
+  func pressButton() {
+    command?.execute()
+  }
+}
+
+// 5. Client
+let remote = RemoteControl()
+let livingRoomLight = Light()
+
+let lightOnCommand = LightOnCommand(light: livingRoomLight)
+let lightOffCommand = LightOffCommand(light: livingRoomLight)
+
+remote.setCommand(command: lightOnCommand)
+remote.pressButton() // Light is on
+
+remote.setCommand(command: lightOffCommand)
+remote.pressButton() // Light is off
+```
+
+
+
+### Positive aspects:
+
+- `Separation of Concerns`: The Command Pattern decouples the sender from the receiver, making the code more maintainable and flexible.
+
+- `Dynamic Commands`: You can add new commands without modifying existing code, promoting extensibility.
+
+- `Testability`: Each command can be tested in isolation, which fits well with TDD principles.
+
+
+
+### Negative aspects:
+
+- `Complexity`: In simple scenarios, the Command Pattern can add unnecessary complexity.
+
+- `Overhead`: It may create a significant number of small command objects, which can affect performance and memory usage.
+
+
+
+
+### Conclusions:
+
+- The Command Pattern is a valuable tool when you need to decouple senders and receivers of commands, or dynamically extend your application with new commands.
+
+- However, it should be used judiciously to avoid unnecessary complexity and overhead.
