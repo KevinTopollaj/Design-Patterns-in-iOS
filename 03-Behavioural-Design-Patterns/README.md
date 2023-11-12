@@ -7,6 +7,7 @@
 * [Memento](#Memento)
 * [Strategy](#Strategy)
 * [Command](#Command)
+* [Chain of Responsibility Pattern](#Chain-of-Responsibility-Pattern)
 
 
 
@@ -510,3 +511,122 @@ remote.pressButton() // Light is off
 - The Command Pattern is a valuable tool when you need to decouple senders and receivers of commands, or dynamically extend your application with new commands.
 
 - However, it should be used judiciously to avoid unnecessary complexity and overhead.
+
+
+
+
+## Chain of Responsibility Pattern
+
+- The Chain of Responsibility is a behavioral design pattern where a request is passed through a chain of handlers.
+
+- Each handler decides either to process the request or to pass it along the chain.
+
+- The idea is to decouple the sender and receiver of a request.
+
+
+### Implementation:
+
+- Let's consider a real-world example where we handle a purchase requests in an e-commerce app.
+
+```swift
+
+// Step 1: Define the Handler protocol
+protocol PurchaseHandler: AnyObject {
+  var nextHandler: PurchaseHandler? { get set }
+  func processPurchase(_ amount: Double)
+}
+
+// Step 2: Implement concrete handlers
+class CEO: PurchaseHandler {
+  var nextHandler: PurchaseHandler?
+
+  func processPurchase(_ amount: Double) {
+    if amount <= 10000 {
+      print("CEO approves the purchase.")
+    } else {
+      print("Purchase request denied.")
+    }
+  }
+}
+
+class Director: PurchaseHandler {
+  var nextHandler: PurchaseHandler?
+
+  func processPurchase(_ amount: Double) {
+    if amount <= 5000 {
+      print("Director approves the purchase.")
+    } else {
+      nextHandler?.processPurchase(amount)
+    }
+  }
+}
+
+// @Kevin_Topollaj
+
+class Manager: PurchaseHandler {
+  var nextHandler: PurchaseHandler?
+
+  func processPurchase(_ amount: Double) {
+    if amount <= 1000 {
+      print("Manager approves the purchase.")
+    } else {
+      nextHandler?.processPurchase(amount)
+    }
+  }
+}
+
+// Step 3: Client code that uses the chain
+class PurchaseManager {
+  private var handlerChain: PurchaseHandler
+
+  init() {
+    // Creating the chain
+    let ceo = CEO()
+    let director = Director()
+    let manager = Manager()
+
+    director.nextHandler = ceo
+    manager.nextHandler = director
+
+    handlerChain = manager
+  }
+
+  func processPurchaseRequest(_ amount: Double) {
+    handlerChain.processPurchase(amount)
+  }
+}
+
+// Step 4: Usage
+let purchaseManager = PurchaseManager()
+purchaseManager.processPurchaseRequest(8000)
+```
+
+
+### Positive aspects:
+
+- `Flexibility`: Handlers can be added, modified, or removed without affecting the client code.
+
+- `Single Responsibility`: Each handler has a single responsibility, making the code more maintainable.
+
+- `Encapsulation`: The details of how a request is handled are encapsulated within each handler.
+
+
+
+### Negative aspects:
+
+- `Guaranteed Handling`: There's no guarantee that a request will be handled. If the end of the chain is reached and no handler can process the request, it may go unhandled.
+
+- `Performance Overhead`: The chain traversal may add some overhead, especially if the chain is long.
+
+- `Complexity`: In some scenarios, having too many handlers or a complex chain might make the code harder to understand.
+
+
+
+### Conclusions:
+
+- The Chain of Responsibility pattern is a powerful tool for handling requests in a flexible and decoupled way.
+
+- It's particularly useful when you have a sequence of processing steps and want to avoid coupling the sender to the concrete receivers.
+
+- However, it's essential to use it judiciously, considering the complexity and potential pitfalls.
+

@@ -5,5 +5,6 @@
         <page name='02-Memento'/>
         <page name='03-Strategy'/>
         <page name='04-Command'/>
+        <page name='05-Chain-of-Responsibility'/>
     </pages>
 </playground>
