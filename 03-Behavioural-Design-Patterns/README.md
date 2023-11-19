@@ -7,8 +7,8 @@
 * [Memento](#Memento)
 * [Strategy](#Strategy)
 * [Command](#Command)
-* [Chain of Responsibility Pattern](#Chain-of-Responsibility-Pattern)
-
+* [Chain of Responsibility](#Chain-of-Responsibility)
+* [State](#State)
 
 
 
@@ -515,7 +515,7 @@ remote.pressButton() // Light is off
 
 
 
-## Chain of Responsibility Pattern
+## Chain of Responsibility
 
 - The Chain of Responsibility is a behavioral design pattern where a request is passed through a chain of handlers.
 
@@ -630,3 +630,116 @@ purchaseManager.processPurchaseRequest(8000)
 
 - However, it's essential to use it judiciously, considering the complexity and potential pitfalls.
 
+
+
+
+## State
+
+- The State Design Pattern allows an object to alter its behaviour when its internal state changes.
+- The pattern encapsulates the states into separate classes and delegates the state-specific behaviour to these classes.
+- This helps in making the object's behaviour more modular and extensible.
+
+
+
+### Implementation:
+
+- In this example we have a ordering process, we have an `Order` class representing the context, and different state classes such as `PendingState`, `ShippedState`, and `DeliveredState` representing the various states an order can be in.
+
+```swift
+import Foundation
+
+// Context class representing the order
+class Order {
+  private var state: OrderState
+
+  init() {
+    // Initial state is set to Pending
+    self.state = PendingState()
+  }
+
+  func setState(state: OrderState) {
+    self.state = state
+  }
+
+  func process() {
+    state.process(order: self)
+  }
+}
+
+// State protocol defining the interface for different order states
+protocol OrderState {
+  func process(order: Order)
+}
+
+// @Kevin_Topollaj
+
+// Concrete state classes implementing the
+// behaviour for different order states
+
+class PendingState: OrderState {
+  func process(order: Order) {
+    print("Order is pending. Processing...")
+    // Logic for processing a pending order
+    order.setState(state: ShippedState())
+  }
+}
+
+class ShippedState: OrderState {
+  func process(order: Order) {
+    print("Order is shipped. Processing...")
+    // Logic for processing a shipped order
+    order.setState(state: DeliveredState())
+  }
+}
+
+class DeliveredState: OrderState {
+  func process(order: Order) {
+    print("Order is delivered. Processing...")
+    // Logic for processing a delivered order
+  }
+}
+
+// Client code
+let order = Order()
+
+// Processing the order in different states
+order.process()
+order.process()
+order.process()
+
+/*
+Order is pending. Processing...
+Order is shipped. Processing...
+Order is delivered. Processing...
+*/
+```
+
+
+### Positive aspects:
+
+- `Modularity`: The State Design Pattern promotes modularity by encapsulating the behaviour of each state in separate classes. This makes it easier to understand, maintain, and extend the code.
+
+- `Flexibility`: Adding new states or modifying existing ones is easier without affecting the context class (Order in this case). Each state class is responsible for its own behaviour.
+
+- `Readability`: The code becomes more readable as each state is represented by its own class, making it clear and organised.
+
+- `Testability`: The separation of concerns allows for easier testing. You can write unit tests for each state class independently.
+
+
+
+### Negative aspects:
+
+- `Complexity`: For simple scenarios, introducing the State Design Pattern might be overkill and could add unnecessary complexity.
+
+- `Number of Classes`: As the number of states increases, the number of state classes also increases, potentially leading to a larger codebase.
+
+- `Context Awareness`: The context class needs to be aware of all possible states, which might lead to a large switch or if-else structure if not handled properly.
+
+
+
+### Conclusions:
+
+- The State Design Pattern is a powerful tool for managing the behaviour of an object as its internal state changes.
+- In the context of iOS development, it can be particularly useful for managing the state of view controllers, animations, or any system where behaviour changes happen based on internal conditions.
+
+- However, like any design pattern, it should be applied judiciously, considering the specific requirements of the application.
