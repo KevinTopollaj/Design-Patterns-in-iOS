@@ -9,6 +9,7 @@
 * [Command](#Command)
 * [Chain of Responsibility](#Chain-of-Responsibility)
 * [State](#State)
+* [Template Method](#Template-Method)
 
 
 
@@ -743,3 +744,52 @@ Order is delivered. Processing...
 - In the context of iOS development, it can be particularly useful for managing the state of view controllers, animations, or any system where behaviour changes happen based on internal conditions.
 
 - However, like any design pattern, it should be applied judiciously, considering the specific requirements of the application.
+
+
+
+
+## Template Method
+
+- The Template Method design pattern is a behavioral pattern that defines the skeleton of an algorithm in the superclass but lets subclasses alter specific steps of the algorithm without changing its structure.
+
+- This pattern promotes code reusability and allows for the customisation of certain steps within a common algorithm.
+
+
+
+### Implementation:
+
+- Let's consider a real-world scenario of building a document processing system for an iOS app.
+
+- The overall document processing involves downloading a document, parsing its content, and saving it in a specific format.
+
+- The Template Method pattern can be applied to encapsulate the common algorithm while allowing subclasses to implement the specific steps.
+
+- This example shows the processing for one type of document (PDF) but we can follow the same logic to implement it for other type of documents (Word, Excel ...etc)
+
+
+
+### Positive aspects:
+
+- `Code Reusability`: The common algorithm is defined in the template class, promoting code reuse across different subclasses.
+
+- `Encapsulation`: The template method encapsulates the overall algorithm, hiding the implementation details of individual steps from the client code.
+
+- `Flexibility`: Subclasses can provide custom implementations for specific steps, allowing for flexibility in adapting the algorithm.
+
+
+
+### Negative aspects:
+
+- `Rigidity`: Changes to the overall algorithm structure in the template class can affect all subclasses, potentially requiring modifications in multiple places.
+
+- `Complexity`: Introducing too many abstract methods or steps in the template method may lead to increased complexity, making the pattern harder to understand.
+
+
+
+### Conclusions:
+
+- The Template Method pattern is a powerful tool for designing frameworks where the overall algorithm structure remains constant, but certain steps can be customized by subclasses.
+
+- It enhances code reusability and provides a structured approach to algorithm design.
+
+- However, careful consideration is needed to balance flexibility and potential complexities introduced by the pattern.

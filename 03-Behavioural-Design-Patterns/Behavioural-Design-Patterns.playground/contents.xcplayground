@@ -7,5 +7,6 @@
         <page name='04-Command'/>
         <page name='05-Chain-of-Responsibility'/>
         <page name='06-State'/>
+        <page name='07-Template Method'/>
     </pages>
 </playground>
