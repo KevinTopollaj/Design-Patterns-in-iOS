@@ -28,12 +28,6 @@ class DocumentProcessorTemplate {
 
 // @Kevin_Topollaj
 
-
-
-
-
-
-
 // Step 3: Create concrete subclasses implementing the abstract methods
 class PDFDocumentProcessor: DocumentProcessorTemplate {
 
