@@ -8,5 +8,6 @@
         <page name='05-Chain-of-Responsibility'/>
         <page name='06-State'/>
         <page name='07-Template Method'/>
+        <page name='08-Interpreter'/>
     </pages>
 </playground>

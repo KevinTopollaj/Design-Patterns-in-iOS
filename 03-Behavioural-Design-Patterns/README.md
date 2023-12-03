@@ -10,6 +10,7 @@
 * [Chain of Responsibility](#Chain-of-Responsibility)
 * [State](#State)
 * [Template Method](#Template-Method)
+* [Interpreter](#Interpreter)
 
 
 
@@ -846,3 +847,106 @@ pdfProcessor.processDocument()
 - It enhances code reusability and provides a structured approach to algorithm design.
 
 - However, careful consideration is needed to balance flexibility and potential complexities introduced by the pattern.
+
+
+
+
+## Interpreter
+
+- Interpreter is a behavioural pattern, in this example, we are using the Interpreter to allow you to customise how dates are displayed.
+- We can define the preferred date format, like "dd-MMM-YYYY".
+- The Interpreter Design Pattern is employed to interpret and format dates based on provided expressions.
+
+
+### Implementation:
+
+- We create the `DateElement` that will be the protocol used in this Interpret design pattern example. 
+
+- We then introduce the `CustomFormatExpression` as a new type of expression that conforms to the `DateElement` protocol.
+
+- Then the `DateInterpreter` class takes a `date` and a `format` as input and it interprets this format, applying each expression to the input date. 
+
+- The `CustomFormatExpression` uses `DateFormatter` to interpret the defined formats.
+
+```swift
+// Protocol
+protocol DateElement {
+  func interpret(date: Date) -> String
+}
+
+// Concrete implementations
+class CustomFormatExpression: DateElement {
+
+  private let format: String
+
+  init(_ format: String) {
+    self.format = format
+  }
+
+  func interpret(date: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = format
+    return dateFormatter.string(from: date)
+  }
+
+}
+
+// @Kevin_Topollaj
+
+// Context
+class DateInterpreter {
+
+  private var date: Date
+  private var format: [DateElement]
+
+  init(date: Date, format: [DateElement]) {
+    self.date = date
+    self.format = format
+  }
+
+  func interpret() -> String {
+    return format.map { $0.interpret(date: date) }.joined(separator: "-")
+  }
+
+}
+
+// Usage
+let currentDate = Date()
+
+let format: [DateElement] = [
+  CustomFormatExpression("dd-MMM-YYYY"),
+  //    CustomFormatExpression("h:mm a")
+]
+
+let interpreter = DateInterpreter(date: currentDate, format: format)
+let formattedDate = interpreter.interpret()
+
+print("Formatted Date: \(formattedDate)")
+```
+
+
+### Positive aspects:
+
+- `Flexibility`: The Interpreter pattern allows for flexibility in date formatting by enabling users to define custom format expressions dynamically.
+
+- `Extensibility`: The design is extensible, allowing the addition of new concrete implementations of `DateElement` without modifying the existing code.
+
+- `Encapsulation`: Each concrete implementation encapsulates the logic for interpreting a specific date element, promoting a clear separation of concerns.
+
+
+
+### Negative aspects:
+
+- `Limited Expressiveness`: While the example is suitable for common date formats, the current design might be limited in handling more complex date formatting scenarios or expressions.
+
+- `Potential Error Handling Issues`: The example lacks explicit error handling for scenarios where the date format is incorrect or unsupported.
+
+
+
+### Conclusions:
+
+- The Interpreter pattern, as demonstrated in the example, offers flexibility and extensibility for simple date formatting scenarios.
+
+- It excels in providing users with the ability to define custom date formats.
+
+- However, for more complex formatting requirements or error-handling scenarios, additional considerations and enhancements may be needed to ensure a robust and adaptable solution.
