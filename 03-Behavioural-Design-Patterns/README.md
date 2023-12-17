@@ -950,3 +950,128 @@ print("Formatted Date: \(formattedDate)")
 - It excels in providing users with the ability to define custom date formats.
 
 - However, for more complex formatting requirements or error-handling scenarios, additional considerations and enhancements may be needed to ensure a robust and adaptable solution.
+
+
+
+
+## Visitor
+
+- The Visitor pattern is a behavioral design pattern that defines a way to traverse an object structure without changing its core logic.
+
+- It allows you to define new operations on a set of objects without altering their structures.
+
+- This is achieved by separating the algorithm from the objects on which it operates.
+
+- `Element`: Represents the interface for the elements in the object structure.
+- `ConcreteElement`: Implements the Element interface and provides an accept method that accepts a visitor.
+- `Visitor`: Represents the interface for the concrete visitors.
+- `ConcreteVisitor`: Implements the Visitor interface and defines the behavior for each component.
+- `ObjectStructure`: Represents the object structure and typically provides a way to iterate over its elements.
+
+- For each interface, `Element` and `Visitor` we can also have an extension that provides us with a default implementation for common use-cases.
+
+
+### Implementation:
+
+- Consider a mobile app that models a zoo with different animals.
+- We want to perform various operations on these animals, such as feeding, cleaning etc...
+
+```swift
+// Element protocol representing a zoo animal
+protocol ZooAnimal {
+  func accept(visitor: ZooAnimalVisitor)
+}
+
+// ConcreteElement representing a Lion
+class Lion: ZooAnimal {
+  func accept(visitor: ZooAnimalVisitor) {
+    visitor.visitLion(self)
+  }
+}
+
+// ConcreteElement representing a Monkey
+class Monkey: ZooAnimal {
+  func accept(visitor: ZooAnimalVisitor) {
+    visitor.visitMonkey(self)
+  }
+}
+
+// ZooAnimalVisitor protocol
+protocol ZooAnimalVisitor {
+  func visitLion(_ lion: Lion)
+  func visitMonkey(_ monkey: Monkey)
+}
+
+// ConcreteVisitor implementing operations on zoo animals
+class Zookeeper: ZooAnimalVisitor {
+
+  func visitLion(_ lion: Lion) {
+    print("Feeding the lion")
+  }
+
+  func visitMonkey(_ monkey: Monkey) {
+    print("Cleaning the monkey enclosure")
+  }
+
+}
+
+// @Kevin_Topollaj
+
+// ObjectStructure representing the zoo
+class Zoo {
+  private var zooAnimals: [ZooAnimal] = []
+  private let zooAnimalVisitor: ZooAnimalVisitor
+
+  init(zooAnimalVisitor: ZooAnimalVisitor) {
+    self.zooAnimalVisitor = zooAnimalVisitor
+  }
+
+  func addAnimal(_ zooAnimal: ZooAnimal) {
+    zooAnimals.append(zooAnimal)
+  }
+
+  func performOperations() {
+    for zooAnimal in zooAnimals {
+      zooAnimal.accept(visitor: zooAnimalVisitor)
+    }
+  }
+}
+
+// Example Usage
+let zookeeper = Zookeeper()
+let zoo = Zoo(zooAnimalVisitor: zookeeper)
+
+zoo.addAnimal(Lion())
+zoo.addAnimal(Monkey())
+
+zoo.performOperations()
+```
+
+
+
+### Positive aspects:
+
+- `Separation of Concerns`: The Visitor pattern separates the algorithm (visitor) from the object structure, promoting a clean and modular design.
+
+- `Open/Closed Principle`: It allows for easy addition of new operations (ConcreteVisitor) without modifying the existing elements (ConcreteElement).
+
+- `Maintainability`: Since the logic for each operation is encapsulated within the concrete visitor classes, modifications to one operation do not affect others.
+
+
+
+### Negative aspects:
+
+- `Complexity`: The Visitor pattern introduces additional classes and protocols, which can lead to an increased overall complexity of the code. 
+
+- `Performance Overhead`: The Visitor pattern might introduce some performance overhead due to the dynamic dispatch of methods.
+
+- `Limited Reusability`: The pattern may not be the best fit for every situation. It's more suitable for scenarios where the object structure is relatively stable, and new operations are added frequently. In cases where the object structure changes frequently, the pattern may not provide significant benefits.
+
+
+### Conclusions:
+
+- The Visitor Design Pattern is a powerful tool when you need to perform frequent changes or additions to operations on a stable set of classes.
+
+- It enhances maintainability and flexibility at the cost of increased complexity.
+
+- However, like any design pattern, it should be used judiciously, considering the specific requirements and trade-offs.

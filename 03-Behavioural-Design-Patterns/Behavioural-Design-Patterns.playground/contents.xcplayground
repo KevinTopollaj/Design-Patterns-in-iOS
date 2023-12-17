@@ -9,5 +9,6 @@
         <page name='06-State'/>
         <page name='07-Template Method'/>
         <page name='08-Interpreter'/>
+        <page name='09-Visitor'/>
     </pages>
 </playground>
