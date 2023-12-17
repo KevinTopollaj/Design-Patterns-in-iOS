@@ -11,6 +11,7 @@
 * [State](#State)
 * [Template Method](#Template-Method)
 * [Interpreter](#Interpreter)
+* [Visitor](#Visitor)
 
 
 
