@@ -10,5 +10,6 @@
         <page name='07-Template Method'/>
         <page name='08-Interpreter'/>
         <page name='09-Visitor'/>
+        <page name='10-Iterator'/>
     </pages>
 </playground>

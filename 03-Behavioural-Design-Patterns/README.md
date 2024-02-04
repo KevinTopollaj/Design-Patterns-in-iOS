@@ -12,6 +12,7 @@
 * [Template Method](#Template-Method)
 * [Interpreter](#Interpreter)
 * [Visitor](#Visitor)
+* [Iterator](#Iterator)
 
 
 
@@ -1076,3 +1077,109 @@ zoo.performOperations()
 - It enhances maintainability and flexibility at the cost of increased complexity.
 
 - However, like any design pattern, it should be used judiciously, considering the specific requirements and trade-offs.
+
+
+
+## Iterator
+
+- The Iterator Design Pattern is a behavioral design pattern that provides a way to access the elements of a collection sequentially without exposing its underlying representation.
+
+- It involves defining an interface for accessing the elements of a collection and keeping track of the current position within that collection.
+
+
+### Implementation:
+
+- Let's consider a real-world scenario where we have a collection of tasks in a to-do list, and we want to iterate through these tasks using the Iterator Design Pattern.
+
+```swift
+import Foundation
+
+// Task represents an element in the collection
+struct Task {
+  let title: String
+  let priority: Int
+}
+
+// Iterator protocol defines methods for iterating through the collection
+protocol TaskIterator {
+  func hasNext() -> Bool
+  func next() -> Task?
+}
+
+// Concrete implementation of the Iterator protocol
+class ToDoListIterator: TaskIterator {
+  private var tasks: [Task]
+  private var position: Int = 0
+
+  init(tasks: [Task]) {
+    self.tasks = tasks
+  }
+
+  func hasNext() -> Bool {
+    return position < tasks.count
+  }
+
+  func next() -> Task? {
+    guard hasNext() else { return nil }
+    defer { position += 1 }
+    return tasks[position]
+  }
+}
+
+// @Kevin_Topollaj
+
+// Collection interface with a method to create an iterator
+protocol ToDoList {
+  func createIterator() -> TaskIterator
+}
+
+// Concrete implementation of the Collection interface
+class ToDoListCollection: ToDoList {
+  private var tasks: [Task] = []
+
+  func addTask(_ task: Task) {
+    tasks.append(task)
+  }
+
+  func createIterator() -> TaskIterator {
+    return ToDoListIterator(tasks: tasks)
+  }
+}
+
+// Example usage
+let toDoList = ToDoListCollection()
+toDoList.addTask(Task(title: "Buy groceries", priority: 1))
+toDoList.addTask(Task(title: "Complete project", priority: 2))
+toDoList.addTask(Task(title: "Exercise", priority: 3))
+
+let iterator = toDoList.createIterator()
+
+while iterator.hasNext() {
+  if let task = iterator.next() {
+    print("Task: \(task.title), Priority: \(task.priority)")
+  }
+}
+```
+
+
+
+### Positive aspects:
+
+- `Separation of Concerns`: The Iterator pattern separates the logic for iterating over a collection from the collection itself, promoting a clean and modular design.
+
+- `Encapsulation`: The internal structure of the collection is encapsulated, and clients only interact with the Iterator interface, reducing dependencies.
+
+
+
+### Negative aspects:
+
+- `Complexity`: For simple collections, implementing the Iterator pattern might seem like overengineering.
+
+- `Duplication`: In Swift, some collections already provide built-in iterators, so using the Iterator pattern might lead to duplication of functionality.
+
+
+
+### Conclusions:
+
+- The Iterator Design Pattern is beneficial when you need to traverse a collection without exposing its internal structure.
+- It promotes code flexibility and maintainability, making it easier to change the traversal algorithm without affecting the client code.
